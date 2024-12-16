@@ -9,6 +9,17 @@ import LiberacaoModal from './components/modals/LiberacaoModal';
 import DevolucaoModal from './components/modals/DevolucaoModal';
 import ConfiguracaoModal from './components/modals/ConfiguracaoModal';
 
+type Relatorio = {
+  id: number;
+  coletor_id: number;
+  status: string;
+  data_operacao: string;
+  registro_user?: {
+    nome: string;
+  };
+};
+
+
 const App: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [darkMode, setDarkMode] = useState(false);
@@ -48,18 +59,31 @@ const App: React.FC = () => {
 
   const fetchRelatorios = async () => {
     try {
-      const { data } = await supabase.from('registro_operacao').select(`
-        id,
-        coletor_id,
-        colaborador_id,
-        status,
-        data_operacao
-      `);
-      setRelatorios(data || []);
-    } catch {
+      const { data, error } = await supabase
+        .from('registro_operacao')
+        .select(`
+          id,
+          coletor_id,
+          status,
+          data_operacao,
+          registro_user (nome)
+        `);
+  
+      if (error) throw error;
+  
+      const relatoriosComNome: Relatorio[] = (data || []).map((relatorio: any) => ({
+        ...relatorio,
+        colaborador_nome: relatorio.registro_user?.nome || 'Desconhecido',
+      }));
+  
+      setRelatorios(relatoriosComNome);
+    } catch (error) {
+      console.error((error as Error).message);
       toast.error('Erro ao carregar relatórios.');
     }
   };
+  
+  
 
   const handleLogout = () => {
     localStorage.removeItem('user');

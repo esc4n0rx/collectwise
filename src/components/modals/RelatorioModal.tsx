@@ -47,7 +47,9 @@ const RelatorioModal: React.FC<RelatorioModalProps> = ({ onClose, relatorios }) 
                 <tr key={relatorio.id}>
                   <td className="border border-gray-300 p-2">{relatorio.id}</td>
                   <td className="border border-gray-300 p-2">{relatorio.coletor_id}</td>
-                  <td className="border border-gray-300 p-2">{relatorio.colaborador_id}</td>
+                  <td className="border border-gray-300 p-2">
+                    {relatorio.colaborador_nome || 'Desconhecido'}
+                  </td>
                   <td className="border border-gray-300 p-2">{relatorio.status}</td>
                   <td className="border border-gray-300 p-2">{relatorio.data_operacao}</td>
                 </tr>
