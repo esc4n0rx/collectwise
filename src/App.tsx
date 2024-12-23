@@ -8,6 +8,7 @@ import RelatorioModal from './components/modals/RelatorioModal';
 import LiberacaoModal from './components/modals/LiberacaoModal';
 import DevolucaoModal from './components/modals/DevolucaoModal';
 import ConfiguracaoModal from './components/modals/ConfiguracaoModal';
+import ColetoresEmAbertoModal from './components/modals/ColetoresEmAbertoModal';
 
 type Relatorio = {
   id: number;
@@ -25,7 +26,7 @@ const App: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [coletorDisponivel, setColetorDisponivel] = useState(0);
   const [coletorLiberado, setColetorLiberado] = useState(0);
-  const [modal, setModal] = useState<null | 'liberacao' | 'devolucao' | 'relatorio' | 'configuracao'>(null);
+  const [modal, setModal] = useState<null | 'liberacao' | 'devolucao' | 'relatorio' | 'configuracao' | 'coletoresEmAberto'>(null);
   const [relatorios, setRelatorios] = useState<any[]>([]);
   const navigate = useNavigate();
 
@@ -126,6 +127,12 @@ const App: React.FC = () => {
             Devolver Coletor
           </button>
           <button
+            className="bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700"
+            onClick={() => setModal('coletoresEmAberto')}
+          >
+            Coletores em Aberto
+          </button>
+          <button
             className="bg-gray-600 text-white py-3 px-6 rounded-lg hover:bg-gray-700"
             onClick={() => {
               setModal('relatorio');
@@ -138,6 +145,17 @@ const App: React.FC = () => {
 
         <ToastContainer />
       </main>
+
+
+      {modal === 'coletoresEmAberto' as any && (
+        <ColetoresEmAbertoModal
+          onClose={() => {
+            setModal(null);
+            fetchIndicadores(); 
+          }}
+        />
+      )}
+
 
       {/* Modais */}
       {modal === 'liberacao' && (
